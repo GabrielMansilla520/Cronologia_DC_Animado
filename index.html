@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New52 - Cronología de Películas Animadas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #07050a;
+            --card-bg: rgba(22, 16, 38, 0.7);
+            --card-border: rgba(139, 92, 246, 0.2);
+            --purple-main: #8b5cf6;
+            --purple-glow: #a855f7;
+            --purple-neon: #c084fc;
+            --showcase-orange: #f97316;
+            --optional-green: #22c55e;
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(139, 92, 246, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 85% 65%, rgba(168, 85, 247, 0.1) 0%, transparent 40%);
+            background-attachment: fixed;
+            padding-bottom: 50px;
+        }
+
+        header {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 60px 20px 30px;
+            text-align: center;
+        }
+
+        .badge {
+            appearance: none;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            background: rgba(139, 92, 246, 0.08);
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            padding: 11px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .universe-switcher {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 22px;
+        }
+
+        .badge:hover,
+        .badge.active {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: var(--purple-main);
+            color: var(--purple-neon);
+            box-shadow: 0 0 18px rgba(139, 92, 246, 0.2);
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 30%, var(--purple-neon) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        p.intro {
+            color: var(--text-secondary);
+            max-width: 750px;
+            margin: 0 auto 30px;
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        .controls {
+            max-width: 1100px;
+            margin: 0 auto 40px;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .search-box {
+            position: relative;
+            flex-grow: 1;
+            max-width: 400px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            background: rgba(15, 11, 26, 0.8);
+            color: white;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            border-color: var(--purple-glow);
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
+        }
+
+        .stats {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .stats span {
+            color: var(--purple-neon);
+            font-weight: 600;
+        }
+
+        .grid-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 25px;
+        }
+
+        .timeline-section {
+            max-width: 1100px;
+            margin: 0 auto 38px;
+        }
+
+        .timeline-section h2 {
+            padding: 0 20px;
+            margin-bottom: 18px;
+            font-size: 1.25rem;
+            color: var(--text-primary);
+        }
+
+        .timeline-section p {
+            padding: 0 20px;
+            margin: -8px 0 18px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .timeline-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 18px;
+            padding: 0 20px;
+            margin: -8px 0 18px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .timeline-meta strong { color: var(--purple-neon); }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: var(--purple-glow);
+            box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.3);
+        }
+
+        .card.showcase { border-color: rgba(249, 115, 22, 0.65); }
+        .card.showcase:hover {
+            border-color: var(--showcase-orange);
+            box-shadow: 0 10px 25px -5px rgba(249, 115, 22, 0.3);
+        }
+
+        .card.optional { border-color: rgba(34, 197, 94, 0.65); }
+        .card.optional:hover {
+            border-color: var(--optional-green);
+            box-shadow: 0 10px 25px -5px rgba(34, 197, 94, 0.3);
+        }
+
+        .card-number {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(7, 5, 10, 0.8);
+            backdrop-filter: blur(5px);
+            border: 1px solid var(--purple-main);
+            color: var(--purple-neon);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.85rem;
+            z-index: 2;
+        }
+
+        .card.showcase .card-number { border-color: var(--showcase-orange); color: #fdba74; }
+        .card.optional .card-number { border-color: var(--optional-green); color: #86efac; }
+
+        .poster-wrapper {
+            position: relative;
+            width: 100%;
+            padding-top: 145%; /* Aspecto de póster 2:3 */
+            overflow: hidden;
+            background: #110c1f;
+        }
+
+        .poster-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .poster-fallback {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            padding: 20px;
+            background: linear-gradient(145deg, #251344, #0e0918 70%);
+            color: var(--purple-neon);
+            font-size: 1.7rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+
+        .card:hover .poster-img {
+            transform: scale(1.06);
+        }
+
+        .card-content {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
+
+        .movie-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .movie-year {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .movie-year::before {
+            content: '';
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background-color: var(--purple-glow);
+            border-radius: 50%;
+        }
+
+        .card.showcase .movie-year::before { background-color: var(--showcase-orange); }
+        .card.optional .movie-year::before { background-color: var(--optional-green); }
+
+        .movie-duration {
+            margin-top: 7px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .card.marked-purple {
+            border-color: var(--purple-neon);
+            animation: purple-pulse 2s ease-in-out infinite;
+        }
+
+        .card.marked-blue {
+            border-color: #38bdf8;
+            box-shadow: 0 0 18px rgba(56, 189, 248, 0.28);
+        }
+
+        .card.marked-blue .card-number { border-color: #38bdf8; color: #7dd3fc; }
+
+        @keyframes purple-pulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(192, 132, 252, 0.22); }
+            50% { box-shadow: 0 0 24px rgba(168, 85, 247, 0.62); }
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2rem; }
+            .grid-container {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+            }
+            .movie-title { font-size: 0.95rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+            <div class="universe-switcher" role="tablist" aria-label="Seleccionar universo">
+                <button class="badge active" type="button" role="tab" aria-selected="true" data-universe="New52">New52</button>
+                <button class="badge" type="button" role="tab" aria-selected="false" data-universe="bridge">Puente entre universos</button>
+                <button class="badge" type="button" role="tab" aria-selected="false" data-universe="tomorrowverse">Tomorrowverse</button>
+            </div>
+        <h1>Orden Cronológico</h1>
+        <p class="intro">
+            A partir de 2013, DC Comics unificó sus películas animadas en un único universo conectado de 17 entregas, comenzando tras los eventos de Flashpoint y culminando en la batalla final de Apokolips.
+        </p>
+    </header>
+
+    <div class="controls">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Buscar contenido por título o año..." oninput="filterMovies()">
+        </div>
+        <div class="stats">
+            Mostrando <span id="count">17</span> de 17 contenidos
+        </div>
+    </div>
+
+    <main>
+        <section class="timeline-section" id="moviesSection">
+            <h2 id="universeHeading">New52</h2>
+            <div class="timeline-meta" id="universeMeta"></div>
+            <div class="grid-container" id="movieGrid"></div>
+        </section>
+        <section class="timeline-section" id="bridgeSection" hidden>
+            <h2>Puente entre universos</h2>
+            <div class="timeline-meta"><span>Rango: <strong>2022</strong></span><span>Maratón: <strong>27 min</strong></span><span>Total completo: <strong>39 h 19 min</strong></span></div>
+            <div class="grid-container" id="bridgeGrid"></div>
+        </section>
+    </main>
+
+    <script>
+        const New52Movies = [
+            { id: 1, title: "Liga de la Justicia: La Paradoja del Tiempo", year: 2013, duration: "1 h 21 min (81 min)", img: "https://m.media-amazon.com/images/M/MV5BMzc3Y2Q1ZTAtNjViNi00ZDljLWI3NGUtY2FjZGQ3Y2FiNjI3XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" },
+            { id: 2, title: "Liga de la Justicia: Guerra", year: 2014, duration: "1 h 19 min (79 min)", img: "https://m.media-amazon.com/images/M/MV5BYmY4ZjYxOGItNDk1Yy00Yjg2LWE3MGEtMTdkMDkxMDMzYjJlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" },
+            { id: 3, title: "El Hijo de Batman", year: 2014, duration: "1 h 14 min (74 min)", img: "https://play-lh.googleusercontent.com/lNTfj8FF39pmJIM_dkmvP8OwJvfjAg8ax5BsOE45wWwF-X4626MINZaogyJivht_nH15" },
+            { id: 4, title: "Liga de la Justicia: El Trono de Atlantis", year: 2015, duration: "1 h 12 min (72 min)", img: "https://m.media-amazon.com/images/S/pv-target-images/bd45f70c1f7c07f88760bc6c1ea394ff67c98b9b61d5b97faadeaf26878a5699.jpg" },
+            { id: 5, title: "Nightwing y Robin", year: 2015, duration: "45 segundos", accent: "optional", img: "https://m.media-amazon.com/images/M/MV5BYTVlYWRkMjItNmYyYS00YTAwLWI1NmYtM2YwNmI5ODAwYzJmXkEyXkFqcGc@._V1_.jpg" },
+            { id: 6, title: "Batman contra Robin", year: 2015, duration: "1 h 20 min (80 min)", img: "https://m.media-amazon.com/images/M/MV5BMjI0ODY2MDE5Nl5BMl5BanBnXkFtZTgwMTk0NTcyNTE@._V1_FMjpg_UX1000_.jpg" },
+            { id: 7, title: "Batman: Mala Sangre", year: 2016, duration: "1 h 12 min (72 min)", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZ9wClLwOL3va5AfYt5QpQkUvxkzHQtbd_W5I8l9TODQ&s=10" },
+            { id: 8, title: "Liga de la Justicia contra Jóvenes Titanes", year: 2016, duration: "1 h 18 min (78 min)", img: "https://play-lh.googleusercontent.com/xakM0AU0BUkbPYgD1K-tLQvJG4aQZJ95r5Q7ExQyxT453dLesWNKEcpLAFAnjUkzRNU" },
+            { id: 9, title: "Liga de la Justicia Oscura", year: 2017, duration: "1 h 15 min (75 min)", img: "https://static.wikia.nocookie.net/batman/images/0/07/Justice_League_Dark_2017.jpg/revision/latest?cb=20161116213129&path-prefix=es" },
+            { id: 10, title: "Jóvenes Titanes: El Contrato de Judas", year: 2017, duration: "1 h 24 min (84 min)", img: "https://static.wikia.nocookie.net/doblaje/images/7/77/Los_J%C3%B3venes_Titanes-_El_Contrato_de_Judas.jpg/revision/latest/thumbnail/width/360/height/360?cb=20210720204945&path-prefix=es" },
+            { id: 11, title: "Escuadrón Suicida: Deuda Infernal", year: 2018, duration: "1 h 26 min (86 min)", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSB13c4Z9nCGWKDmpk2hHmYqpiOZvbWJjLhw3En8yTJbeL0EQINiH5kmeW2&s=10" },
+            { id: 12, title: "La Muerte de Superman", year: 2018, duration: "1 h 21 min (81 min)", img: "https://static.wikia.nocookie.net/doblaje/images/a/aa/50116130_384957898927401_4649936739812710096_n.jpg/revision/latest?cb=20190129183517&path-prefix=es" },
+            { id: 13, title: "Constantine: Ciudad de Demonios", year: 2018, duration: "1 h 30 min (90 min)", img: "https://m.media-amazon.com/images/M/MV5BZGQxOTg2YWYtM2VhMy00NGY1LWI0ODQtZWUxMjJmZGE4NmZhXkEyXkFqcGc@._V1_.jpg" },
+            { id: 14, title: "El Reinado de los Superhombres", year: 2019, duration: "1 h 27 min (87 min)", img: "https://m.media-amazon.com/images/M/MV5BZWQ1YmRhZDEtODBkZi00ODZiLTk5MjctYmYxYWRjZWI0NTBkXkEyXkFqcGc@._V1_.jpg" },
+            { id: 15, title: "Batman: Silencio", year: 2019, duration: "1 h 21 min (81 min)", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeWzcgoDTrjy_4Hc_ZZd4tXYXYUkjJsm9st-84czPgoKDvNRI-n_yeoeQ&s=10" },
+            { id: 16, title: "Mujer Maravilla: Linaje", year: 2019, duration: "1 h 23 min (83 min)", img: "https://static.wikia.nocookie.net/doblaje/images/4/4c/Mujer_Maravilla_Linaje.jpg/revision/latest?cb=20200426181631&path-prefix=es" },
+            { id: 17, title: "Liga de la Justicia Oscura: Guerra de Apokolips", year: 2020, duration: "1 h 30 min (90 min)", img: "https://m.media-amazon.com/images/M/MV5BNjIyNDg5ZWMtODI5ZC00M2NlLTk2NWYtZWEzOWJmYWVhMzY3XkEyXkFqcGc@._V1_.jpg" }
+        ];
+
+        const tomorrowverseMovies = [
+            { id: 1, title: "Superman: El hombre del mañana", year: 2020, duration: "1 h 26 min (86 min)", img: "https://m.media-amazon.com/images/M/MV5BODliZjFjOGEtMmE5Yy00MGM0LTg3NjItOWMwODNiYTljNTdjXkEyXkFqcGc@._V1_.jpg" },
+            { id: 2, title: "Sociedad de la Justicia: Segunda Guerra Mundial", year: 2021, duration: "1 h 24 min (84 min)", img: "https://static.wikia.nocookie.net/doblaje/images/d/dc/Poster_de_La_Sociedad_de_la_Justicia_de_Am%C3%A9rica-_Segunda_Guerra_Mundial_en_Espa%C3%B1ol.webp/revision/latest?cb=20210226181909&path-prefix=es" },
+            { id: 3, title: "DC Showcase: Kamandi: ¡El último chico en la Tierra!", year: 2021, duration: "18 min", accent: "showcase", img: "https://m.media-amazon.com/images/M/MV5BZTVhZjI4ZGQtMTE2Ny00ZDE4LWJkNmEtOTE3YzRkNDY5Y2EzXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" },
+            { id: 4, title: "Batman: El largo Halloween, Parte uno", year: 2021, duration: "1 h 25 min (85 min)", img: "https://static.wikia.nocookie.net/doblaje/images/3/39/Batman_largo_halloween.jpg/revision/latest?cb=20241008033156&path-prefix=es" },
+            { id: 5, title: "Batman: El largo Halloween, Parte dos", year: 2021, duration: "1 h 27 min (87 min)", img: "https://m.media-amazon.com/images/M/MV5BYWViZDQ4NGYtYjEwMi00YjFhLTg4NjQtNDlmNjY3YTJlZjIyXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" },
+            { id: 6, title: "DC Showcase: Adam Strange", year: 2020, duration: "16 min", accent: "showcase", img: "https://m.media-amazon.com/images/M/MV5BZTY5MjVlZTYtNzk4Mi00YzE4LTkyMmQtMjY4MjIwMmQ2OWI1XkEyXkFqcGc@._V1_.jpg" },
+            { id: 7, title: "Linterna Verde: Cuidado con mi poder", year: 2022, duration: "1 h 27 min (87 min)", img: "https://pics.filmaffinity.com/green_lantern_beware_my_power-488563887-large.jpg" },
+            { id: 8, title: "Legión de Superhéroes", year: 2023, duration: "1 h 23 min (83 min)", img: "https://static.wikia.nocookie.net/doblaje/images/3/30/LS_Poster.jpg/revision/latest?cb=20230527062138&path-prefix=es" },
+            { id: 9, title: "Liga de la Justicia: Mundo de Guerra", year: 2023, duration: "1 h 29 min (89 min)", img: "https://static.wikia.nocookie.net/batman/images/b/b9/P%C3%B3ster_oficial_de_Justice_League_Warworld.png/revision/latest?cb=20230608130733&path-prefix=es" },
+            { id: 10, title: "Liga de la Justicia: Crisis en Tierras Infinitas - Parte Uno", year: 2024, duration: "1 h 33 min (93 min)", img: "https://m.media-amazon.com/images/S/pv-target-images/5d8047c423531c53a9bb535c66cc685ffc3d2f6f680298423ef61a0600456d03.jpg" },
+            { id: 11, title: "Liga de la Justicia: Crisis en Tierras Infinitas - Segunda parte", year: 2024, duration: "1 h 35 min (95 min)", img: "https://play-lh.googleusercontent.com/0cK8zzbLMMmEGniWtjaWlfgm9lvMWURRvnvkMBdiTx91l3-pHeMxrPtyEz5gahEwo8cso2fpDIo6EUZ_BEM8" },
+            { id: 12, title: "Liga de la Justicia: Crisis en Tierras Infinitas - Tercera parte", year: 2024, duration: "1 h 38 min (98 min)", img: "https://static.wikia.nocookie.net/doblaje/images/1/1f/CIE3_Poster.png/revision/latest?cb=20240716004242&path-prefix=es" }
+        ];
+
+        const bridgeMovies = [
+            { id: 1, title: "DC Showcase: Constantine: Casa del Misterio", year: 2022, duration: "27 min", accent: "showcase", img: "https://m.media-amazon.com/images/M/MV5BMGUxYmEwZjItMThkMS00YmQ1LWFlNjQtZTUyYWEwYzVhNWE1XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" }
+        ];
+
+        let activeMovies = New52Movies;
+        const markStorageKey = 'dc-timeline-marks';
+        const universeMeta = {
+            New52: ['2013–2020', 'aprox. 22 h'],
+            tomorrowverse: ['2020–2024', 'aprox. 17 h']
+        };
+
+        function getMarks() {
+            try { return JSON.parse(localStorage.getItem(markStorageKey)) || {}; }
+            catch { return {}; }
+        }
+
+        function getUniverseKey() {
+            if (activeMovies === tomorrowverseMovies) return 'tomorrowverse';
+            if (activeMovies === bridgeMovies) return 'bridge';
+            return 'New52';
+        }
+
+        function getMarkState(movie) {
+            return getMarks()[`${getUniverseKey()}-${movie.id}`] || '';
+        }
+
+        function setMarkState(movie, state) {
+            const marks = getMarks();
+            const key = `${getUniverseKey()}-${movie.id}`;
+            if (state) marks[key] = state;
+            else delete marks[key];
+            localStorage.setItem(markStorageKey, JSON.stringify(marks));
+        }
+
+        function createMovieCard(movie, hasMarkedCard) {
+            const card = document.createElement('div');
+            const savedState = getMarkState(movie);
+            const state = savedState || (!hasMarkedCard && movie.id === activeMovies.find(item => !getMarkState(item))?.id ? 'purple' : '');
+            card.className = `card ${movie.accent || ''} ${state ? `marked-${state}` : ''}`;
+            card.setAttribute('role', 'button');
+            card.setAttribute('tabindex', '0');
+            card.setAttribute('aria-label', `${movie.title}, ${state ? `marcada ${state === 'purple' ? 'en morado' : 'en azul'}` : 'sin marcar'}`);
+            card.innerHTML = `
+                <div class="card-number">#${movie.id}</div>
+                <div class="poster-wrapper">
+                    ${movie.img ? `<img class="poster-img" src="${movie.img}" alt="${movie.title}" loading="lazy">` : `<span class="poster-fallback">DC<br>${movie.year}</span>`}
+                </div>
+                <div class="card-content">
+                    <h3 class="movie-title">${movie.title}</h3>
+                    <div class="movie-year">${movie.year}</div>
+                    <div class="movie-duration">Duración: ${movie.duration}</div>
+                </div>
+            `;
+            const advanceMark = () => {
+                const currentState = getMarkState(movie) || (state === 'purple' ? 'purple' : '');
+                setMarkState(movie, currentState === '' ? 'purple' : currentState === 'purple' ? 'blue' : '');
+                filterMovies();
+            };
+            card.addEventListener('click', advanceMark);
+            card.addEventListener('keydown', event => {
+                if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); advanceMark(); }
+            });
+            return card;
+        }
+
+        function renderMovies(movieList) {
+            const grid = document.getElementById('movieGrid');
+            grid.innerHTML = '';
+            const hasMarkedCard = activeMovies.some(movie => getMarkState(movie));
+            movieList.forEach(movie => grid.appendChild(createMovieCard(movie, hasMarkedCard)));
+
+            document.querySelector('.stats').innerHTML = `Mostrando <span id="count">${movieList.length}</span> de ${activeMovies.length} contenidos`;
+        }
+
+        function renderBridge(movieList = bridgeMovies) {
+            const bridgeGrid = document.getElementById('bridgeGrid');
+            bridgeGrid.innerHTML = '';
+            const hasMarkedCard = activeMovies.some(movie => getMarkState(movie));
+            movieList.forEach(movie => bridgeGrid.appendChild(createMovieCard(movie, hasMarkedCard)));
+            document.querySelector('.stats').innerHTML = `Mostrando <span id="count">${movieList.length}</span> de ${activeMovies.length} contenidos`;
+        }
+
+        function filterMovies() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = activeMovies.filter(movie => 
+                movie.title.toLowerCase().includes(query) || 
+                movie.year.toString().includes(query)
+            );
+            if (activeMovies === bridgeMovies) {
+                renderBridge(filtered);
+            } else {
+                renderMovies(filtered);
+            }
+        }
+
+        function selectUniverse(universe) {
+            activeMovies = universe === 'tomorrowverse' ? tomorrowverseMovies : universe === 'bridge' ? bridgeMovies : New52Movies;
+            const moviesSection = document.getElementById('moviesSection');
+            const bridgeSection = document.getElementById('bridgeSection');
+            const isBridge = universe === 'bridge';
+            moviesSection.hidden = isBridge;
+            bridgeSection.hidden = !isBridge;
+            document.getElementById('universeHeading').textContent = universe === 'tomorrowverse' ? 'Tomorrowverse' : 'New52';
+            if (!isBridge) {
+                const [range, marathon] = universeMeta[universe];
+                document.getElementById('universeMeta').innerHTML = `<span>Rango: <strong>${range}</strong></span><span>Maratón: <strong>${marathon}</strong></span>`;
+            }
+            if (isBridge) {
+                renderBridge();
+            } else {
+                renderMovies(activeMovies);
+            }
+            document.querySelectorAll('[data-universe]').forEach(button => {
+                const isActive = button.dataset.universe === universe;
+                button.classList.toggle('active', isActive);
+                button.setAttribute('aria-selected', isActive);
+            });
+            document.getElementById('searchInput').value = '';
+        }
+
+        document.querySelectorAll('[data-universe]').forEach(button => {
+            button.addEventListener('click', () => selectUniverse(button.dataset.universe));
+        });
+
+        // Render inicial
+        selectUniverse('New52');
+        renderMovies(activeMovies);
+        renderBridge();
+    </script>
+</body>
+</html>
